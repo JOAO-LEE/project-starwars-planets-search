@@ -1,29 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
 import myContext from './MyContext';
 
-function StarWarsProvider({ children }) {
-  const [data, setData] = useState({ data: [] });
-
+function ProviderStarWars({ children }) {
+  const [data, setData] = useState([]);
+  const [moreData, setMoreData] = useState([]);
   useEffect(() => {
-    const starWarsFetch = async () => {
-      const request = await fetch('https://swapi-trybe.herokuapp.com/api/planets/');
-      const response = await request.json();
-      const { results } = response;
-      const filteredObject = results.filter((obj) => delete obj.residents);
-      setData({ data: filteredObject });
+    const apiCall = async () => {
+      const MINUS_ONE = -1;
+      const REGULAR_ONE = 1;
+      const myFetch = await fetch('https://swapi.dev/api/planets/');
+      const responseReceived = await myFetch.json();
+      const { results } = responseReceived;
+      const removeResidentKey = results
+        .filter((elements) => delete elements.residents);
+      const sortedResults = removeResidentKey
+        .sort((a, b) => (a.name < b.name ? MINUS_ONE : REGULAR_ONE));
+      setData(sortedResults);
+      setMoreData(sortedResults);
     };
-    starWarsFetch();
+    apiCall();
   }, []);
+  const contextValue = { data, moreData, setMoreData };
   return (
-    <myContext.Provider value={ { ...data } }>
+    <myContext.Provider value={ contextValue }>
       {children}
     </myContext.Provider>
   );
 }
 
-StarWarsProvider.propTypes = {
-  children: PropTypes.node,
-}.isRequired;
-
-export default StarWarsProvider;
+ProviderStarWars.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+export default ProviderStarWars;
