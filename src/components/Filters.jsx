@@ -2,7 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import myContext from '../context/MyContext';
 
 function Filters() {
-  const { filterByNumericValues, setFilterByNumericValues } = useContext(myContext);
+  const { filterByNumericValues, setFilterByNumericValues, data,
+    setMoreData } = useContext(myContext);
   const columnOptions = ['population', 'orbital_period', 'diameter',
     'rotation_period', 'surface_water'];
   const [updatedOptions, setUpdatedOptions] = useState(columnOptions);
@@ -11,6 +12,7 @@ function Filters() {
     comparison: 'maior que',
     value: 0,
   });
+  const [orderBy, setOrderBy] = useState({ column: 'population', sort: 'ASC' });
 
   function handleChange({ target: { value, name } }) {
     setComparison({ ...filterFields, [name]: value });
@@ -34,10 +36,43 @@ function Filters() {
       .filter((filter) => filter.column !== column);
     setFilterByNumericValues(deleteSpecificFilter);
   }
+
   function removeAllFilters() {
     setFilterByNumericValues([]);
     setUpdatedOptions(columnOptions);
   }
+
+  const setOrdenation = () => {
+    let planetsOrder = [];
+
+    if (orderBy.sort === 'ASC') {
+      const filterForNumber = data.filter(
+        (planet) => planet[orderBy.column] !== 'unknown',
+      );
+      const planetsSortASC = filterForNumber.sort(
+        (a, b) => a[orderBy.column] - b[orderBy.column],
+      );
+      const filterForUnknow = data.filter(
+        (planet) => planet[orderBy.column] === 'unknown',
+      );
+      planetsOrder = [...planetsSortASC, ...filterForUnknow];
+    }
+
+    if (orderBy.sort === 'DESC') {
+      const filterForNumber = data.filter(
+        (planet) => planet[orderBy.column] !== 'unknown',
+      );
+      const planetsSortDESC = filterForNumber.sort(
+        (a, b) => b[orderBy.column] - a[orderBy.column],
+      );
+      const filterForUnknow = data.filter(
+        (planet) => planet[orderBy.column] === 'unknown',
+      );
+      planetsOrder = [...planetsSortDESC, ...filterForUnknow];
+    }
+    setMoreData(planetsOrder);
+  };
+
   return (
     <>
       <form>
@@ -78,6 +113,46 @@ function Filters() {
           </button>
         </label>
       </form>
+      <form>
+        <select
+          name="column-sort"
+          onChange={ ({ target: { value } }) => setOrderBy({
+            ...orderBy, column: value }) }
+          data-testid="column-sort"
+        >
+          {columnOptions.map((option) => (
+            <option key={ option }>{option}</option>))}
+        </select>
+        <button
+          type="button"
+          data-testid="column-sort-button"
+          onClick={ setOrdenation }
+        >
+          order by
+        </button>
+        <label htmlFor="sort">
+          ascendent
+          <input
+            onChange={ ({ target: { value } }) => setOrderBy({
+              ...orderBy, sort: value }) }
+            name="sort"
+            data-testid="column-sort-input-asc"
+            value="ASC"
+            type="radio"
+          />
+        </label>
+        <label htmlFor="sort">
+          descendent
+          <input
+            onChange={ ({ target: { value } }) => setOrderBy({
+              ...orderBy, sort: value }) }
+            name="sort"
+            data-testid="column-sort-input-desc"
+            value="DESC"
+            type="radio"
+          />
+        </label>
+      </form>
       {filterByNumericValues
         .map(({ column, comparison, value }) => (
           <div
@@ -98,7 +173,6 @@ function Filters() {
         onClick={ removeAllFilters }
       >
         Remover todas as filtragens
-
       </button>
     </>
   );

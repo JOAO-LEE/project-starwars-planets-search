@@ -10,14 +10,14 @@ function ProviderStarWars({ children }) {
   useEffect(() => {
     const apiCall = async () => {
       const MINUS_ONE = -1;
-      const REGULAR_ONE = 1;
-      const myFetch = await fetch('https://swapi.dev/api/planets/');
+      const JUST_ONE = 1;
+      const myFetch = await fetch('https://swapi-trybe.herokuapp.com/api/planets/');
       const responseReceived = await myFetch.json();
       const { results } = responseReceived;
       const removeResidentKey = results
         .filter((elements) => delete elements.residents);
       const sortedResults = removeResidentKey
-        .sort((a, b) => (a.name < b.name ? MINUS_ONE : REGULAR_ONE));
+        .sort((a, b) => (a.name < b.name ? MINUS_ONE : JUST_ONE));
       setData(sortedResults);
       setMoreData(sortedResults);
     };

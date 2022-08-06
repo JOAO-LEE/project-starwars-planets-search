@@ -27,7 +27,7 @@ function Table() {
         <tbody>
           {moreData.map((items, index) => (
             <tr key={ index }>
-              <td>{items.name}</td>
+              <td data-testid="planet-name">{items.name}</td>
               <td>{items.rotation_period}</td>
               <td>{items.orbital_period}</td>
               <td>{items.diameter}</td>
