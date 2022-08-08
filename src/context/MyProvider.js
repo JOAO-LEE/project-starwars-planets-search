@@ -11,7 +11,8 @@ function ProviderStarWars({ children }) {
     const apiCall = async () => {
       const MINUS_ONE = -1;
       const JUST_ONE = 1;
-      const myFetch = await fetch('https://swapi-trybe.herokuapp.com/api/planets/');
+      const fetchUrl = 'https://swapi-trybe.herokuapp.com/api/planets/';
+      const myFetch = await fetch(fetchUrl);
       const responseReceived = await myFetch.json();
       const { results } = responseReceived;
       const removeResidentKey = results
@@ -26,11 +27,26 @@ function ProviderStarWars({ children }) {
 
   useEffect(() => {
     let filteredColumn = [...data];
+    // tentando implementar a mesma lógica com switch/case
+    //   switch (comparison) {
+    //   case 'maior que':
+    //     setMoreData(data
+    //       .filter((planet) => Number(planet[column]) > Number(value)));
+    //     break;
+    //   case 'menor que':
+    //     setMoreData(data
+    //       .filter((planet) => Number(planet[column]) < Number(value)));
+    //     break;
+    //   default:
+    //     setMoreData(data
+    //       .filter((planet) => Number(planet[column]) === Number(value)));
+    //     break;
+    //   }
     filterByNumericValues.forEach(({ column, comparison, value }) => {
       if (comparison === 'maior que') {
-        const biggerThen = filteredColumn
+        const biggerThan = filteredColumn
           .filter((item) => Number(item[column]) > Number(value));
-        filteredColumn = [...biggerThen];
+        filteredColumn = [...biggerThan];
       }
       if (comparison === 'menor que') {
         const lessThan = filteredColumn
@@ -43,8 +59,9 @@ function ProviderStarWars({ children }) {
         filteredColumn = [...equalTo];
       }
     });
+
     setMoreData(filteredColumn);
-  }, [filterByNumericValues]);
+  }, [data, filterByNumericValues]);
   const contextValue = {
     data,
     moreData,

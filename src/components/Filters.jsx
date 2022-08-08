@@ -25,7 +25,6 @@ function Filters() {
   function updatePlanets() {
     setFilterByNumericValues([...filterByNumericValues, filterFields]);
     const selectedOption = filterFields.column;
-    console.log(selectedOption);
     const remaingOptions = updatedOptions.filter((option) => option !== selectedOption);
     setUpdatedOptions(remaingOptions);
   }
@@ -43,34 +42,33 @@ function Filters() {
   }
 
   const setOrdenation = () => {
-    let planetsOrder = [];
-
+    let planetsToOrder = [];
     if (orderBy.sort === 'ASC') {
-      const filterForNumber = data.filter(
+      const numberFilter = data.filter(
         (planet) => planet[orderBy.column] !== 'unknown',
       );
-      const planetsSortASC = filterForNumber.sort(
+      const ascendentSort = numberFilter.sort(
         (a, b) => a[orderBy.column] - b[orderBy.column],
       );
-      const filterForUnknow = data.filter(
+      const filterUnknownInfo = data.filter(
         (planet) => planet[orderBy.column] === 'unknown',
       );
-      planetsOrder = [...planetsSortASC, ...filterForUnknow];
+      planetsToOrder = [...ascendentSort, ...filterUnknownInfo];
     }
 
     if (orderBy.sort === 'DESC') {
-      const filterForNumber = data.filter(
+      const numberFilter = data.filter(
         (planet) => planet[orderBy.column] !== 'unknown',
       );
-      const planetsSortDESC = filterForNumber.sort(
+      const descendentSort = numberFilter.sort(
         (a, b) => b[orderBy.column] - a[orderBy.column],
       );
-      const filterForUnknow = data.filter(
+      const filterUnknownInfo = data.filter(
         (planet) => planet[orderBy.column] === 'unknown',
       );
-      planetsOrder = [...planetsSortDESC, ...filterForUnknow];
+      planetsToOrder = [...descendentSort, ...filterUnknownInfo];
     }
-    setMoreData(planetsOrder);
+    setMoreData(planetsToOrder);
   };
 
   return (
