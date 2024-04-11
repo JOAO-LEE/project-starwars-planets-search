@@ -28,21 +28,20 @@ function ProviderStarWars({ children }) {
   useEffect(() => {
     let filteredColumn = [...data];
     // tentando implementar a mesma lógica com switch/case
-    //   switch (comparison) {
-    //   case 'maior que':
-    //     setMoreData(data
-    //       .filter((planet) => Number(planet[column]) > Number(value)));
-    //     break;
-    //   case 'menor que':
-    //     setMoreData(data
-    //       .filter((planet) => Number(planet[column]) < Number(value)));
-    //     break;
-    //   default:
-    //     setMoreData(data
-    //       .filter((planet) => Number(planet[column]) === Number(value)));
-    //     break;
-    //   }
     filterByNumericValues.forEach(({ column, comparison, value }) => {
+      // switch (comparison) {
+      // case 'maior que':
+      //   setMoreData(data
+      //     .filter((planet) => Number(planet[column]) > Number(value)));
+      //   break;
+      // case 'menor que':
+      //   setMoreData(data
+      //     .filter((planet) => Number(planet[column]) < Number(value)));
+      //   break;
+      // default:
+      //   setMoreData(data
+      //     .filter((planet) => Number(planet[column]) === Number(value)));
+      //   break;
       if (comparison === 'maior que') {
         const biggerThan = filteredColumn
           .filter((item) => Number(item[column]) > Number(value));
@@ -60,7 +59,7 @@ function ProviderStarWars({ children }) {
       }
     });
 
-    setMoreData(filteredColumn);
+    // setMoreData(filteredColumn);
   }, [data, filterByNumericValues]);
   const contextValue = {
     data,
